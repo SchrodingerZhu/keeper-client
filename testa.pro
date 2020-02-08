@@ -1,4 +1,4 @@
-QT       += core gui androidextras
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++11
@@ -40,7 +40,14 @@ DISTFILES += \
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 ANDROID_EXTRA_LIBS = /home/schrodinger/CLionProject/keepercore/target/aarch64-linux-android/release/libkeeper.so
 
-LIBS += -L/home/schrodinger/CLionProject/keepercore/target/aarch64-linux-android/release -lkeeper
+LIBS += -L$$PWD/keepercore/lib -lkeeper
 
-INCLUDEPATH += $$PWD/android/keeper_lib/include
-DEPENDPATH += $$PWD/android/keeper_lib/include
+INCLUDEPATH += $$PWD/keepercore/include
+DEPENDPATH += $$PWD/keepercore/include
+
+
+unix:!macx: LIBS += -L/usr/local/lib/mimalloc-1.4/ -lmimalloc
+
+INCLUDEPATH += /usr/local/lib/mimalloc-1.4/include
+DEPENDPATH += /usr/local/lib/mimalloc-1.4/include
+

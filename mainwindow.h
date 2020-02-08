@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <keeper.h>
 #include <QInputDialog>
+#include <QClipboard>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

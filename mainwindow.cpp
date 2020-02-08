@@ -23,11 +23,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_list_button_clicked()
 {
+    ui->text_area->clear();
     bool ok;
     auto password = QInputDialog::getText(this, "Password Input", "Password:", QLineEdit::Password, "", &ok).toStdString();
     if (ok && !password.empty()) {
         auto result = fetch_list(password.c_str());
-        ui->text_area->clear();
         QTextCursor cursor(ui->text_area->document());
         cursor.beginEditBlock();
         for(size_t i = 0; i < result.length; ++i) {
@@ -41,6 +41,7 @@ void MainWindow::on_list_button_clicked()
 
 void MainWindow::on_fetch_button_clicked()
 {
+    ui->text_area->clear();
     bool ok0;
     auto name = QInputDialog::getText(this, "Name Input", "Name:", QLineEdit::Normal, "", &ok0).toStdString();
     if (!ok0) return;
@@ -48,11 +49,15 @@ void MainWindow::on_fetch_button_clicked()
     auto password = QInputDialog::getText(this, "Password Input", "Password:", QLineEdit::Password, "", &ok1).toStdString();
     if (ok1 && !name.empty() && !password.empty()) {
         auto result = fetch_password(name.c_str(), password.c_str());
-        ui->text_area->clear();
         if (result.length == 0) {
             ui->text_area->setText("fetch error");
         } else {
-            ui->text_area->setText(result.vector[0]);
+            if (ui->checkBox->isChecked() && strcmp(result.vector[0], "PASSWORD ERROR!")) {
+                auto clipboard = QApplication::clipboard();
+                clipboard->setText(result.vector[0]);
+                ui->text_area->setText("In ClipBoard");
+            }
+            else ui->text_area->setText(result.vector[0]);
         }
         clean_result(result);
     }
@@ -62,6 +67,7 @@ void MainWindow::on_fetch_button_clicked()
 
 void MainWindow::on_add_button_clicked()
 {
+    ui->text_area->clear();
     bool ok0;
     auto name = QInputDialog::getText(this, "Name Input", "Name:", QLineEdit::Normal, "", &ok0).toStdString();
     if (!ok0) return;
@@ -72,7 +78,6 @@ void MainWindow::on_add_button_clicked()
     auto password = QInputDialog::getText(this, "Password Input", "Password:", QLineEdit::Password, "", &ok2).toStdString();
     if (ok2 && !name.empty() && !content.empty() && !password.empty()) {
         auto result = add_password(name.c_str(), content.c_str(), password.c_str());
-        ui->text_area->clear();
         if (result.length == 0) {
             ui->text_area->setText("add error");
         } else {
@@ -84,6 +89,7 @@ void MainWindow::on_add_button_clicked()
 
 void MainWindow::on_delete_button_clicked()
 {
+    ui->text_area->clear();
     bool ok0;
     auto name = QInputDialog::getText(this, "Name Input", "Name:", QLineEdit::Normal, "", &ok0).toStdString();
     if (!ok0 || name.empty()) return;
@@ -92,7 +98,6 @@ void MainWindow::on_delete_button_clicked()
     auto password = QInputDialog::getText(this, "Password Input", "Password:", QLineEdit::Password, "", &ok0).toStdString();
     if (ok0 && !password.empty()) {
         auto result = delete_password(name.c_str(), password.c_str());
-        ui->text_area->clear();
         if (result.length == 0) {
             ui->text_area->setText("delete error");
         } else {
@@ -104,17 +109,22 @@ void MainWindow::on_delete_button_clicked()
 
 void MainWindow::on_generate_button_clicked()
 {
+    ui->text_area->clear();
     bool ok0;
     auto name = QInputDialog::getText(this, "Name Input", "Name:", QLineEdit::Normal, "", &ok0).toStdString();
     if (!ok0 || name.empty()) return;
     auto password = QInputDialog::getText(this, "Password Input", "Password:", QLineEdit::Password, "", &ok0).toStdString();
     if (ok0 && !password.empty()) {
         auto result = generate_password(name.c_str(), password.c_str());
-        ui->text_area->clear();
         if (result.length == 0) {
             ui->text_area->setText("generate error");
         } else {
-            ui->text_area->setText(result.vector[0]);
+            if (ui->checkBox->isChecked() && strcmp(result.vector[0], "PASSWORD ERROR!")) {
+                auto clipboard = QApplication::clipboard();
+                clipboard->setText(result.vector[0]);
+                ui->text_area->setText("In ClipBoard");
+            }
+            else ui->text_area->setText(result.vector[0]);
         }
         clean_result(result);
     }
